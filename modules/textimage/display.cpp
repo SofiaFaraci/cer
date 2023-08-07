@@ -83,9 +83,9 @@ bool MainModule::updateModule()
         yarp::os::Time::delay(0.100);
         status = status_idle;
         yarp::os::Bottle b;
-        b.addVocab(VOCAB_SET);
-        b.addVocab(VOCAB_FACE);
-        b.addVocab(VOCAB_FACE_HAPPY);
+        b.addVocab32(VOCAB_SET);
+        b.addVocab32(VOCAB_FACE);
+        b.addVocab32(VOCAB_FACE_HAPPY);
         cmdPort.write(b);
     }
     else if (status == status_running)
@@ -177,7 +177,7 @@ bool MainModule::respond(const Bottle& command, Bottle& reply)
         scroll_speed = command.get(1).asFloat64();
     }
 
-    reply.addVocab(Vocab::encode("ack"));
+    reply.addVocab32(Vocab32::encode("ack"));
 
     return true;
 }

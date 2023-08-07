@@ -644,7 +644,7 @@ public:
                     {
                         yError("wrong target list format!");
                         reply.clear();
-                        reply.addVocab(Vocab::encode("nack"));
+                        reply.addVocab32(Vocab32::encode("nack"));
                         return false;
                     }
 
@@ -652,7 +652,7 @@ public:
                     {
                         yError("wrong target size, must be 7!");
                         reply.clear();
-                        reply.addVocab(Vocab::encode("nack"));
+                        reply.addVocab32(Vocab32::encode("nack"));
                         return false;
                     }
 
@@ -707,7 +707,7 @@ public:
                 {
                     yError("wrong margin size, must be 6!");
                     reply.clear();
-                    reply.addVocab(Vocab::encode("nack"));
+                    reply.addVocab32(Vocab32::encode("nack"));
                     return false;
                 }
 
@@ -806,8 +806,8 @@ public:
             if (verbosity>0)
                 yInfo("Received reply from solver: %s",reply.toString().c_str());
 
-            bool success=(reply.get(0).asVocab()==Vocab::encode("ack"));
-            if (success || (reply.get(0).asVocab()==Vocab::encode("nack")))
+            bool success=(reply.get(0).asVocab32()==Vocab32::encode("ack"));
+            if (success || (reply.get(0).asVocab32()==Vocab32::encode("nack")))
             {
                 reply=reply.tail();
 
@@ -862,7 +862,7 @@ public:
                             {
                                 yError("wrong target list format!");
                                 reply.clear();
-                                reply.addVocab(Vocab::encode("nack"));
+                                reply.addVocab32(Vocab32::encode("nack"));
                                 return false;
                             }
 
@@ -870,7 +870,7 @@ public:
                             {
                                 yError("wrong target size!");
                                 reply.clear();
-                                reply.addVocab(Vocab::encode("nack"));
+                                reply.addVocab32(Vocab32::encode("nack"));
                                 return false;
                             }
 
@@ -983,17 +983,17 @@ public:
     /****************************************************************/
     bool respond(const Bottle &cmd, Bottle &reply)
     {
-        int cmd_0=cmd.get(0).asVocab();
+        int cmd_0=cmd.get(0).asVocab32();
         if (cmd.size()==3)
         {
-            if (cmd_0==Vocab::encode("set"))
+            if (cmd_0==Vocab32::encode("set"))
             {
                 string cmd_1=cmd.get(1).asString();
                 if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
                     gen->setT(cmd.get(2).asFloat64());
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="Ts")
                 {
@@ -1001,13 +1001,13 @@ public:
                     Ts=cmd.get(2).asFloat64();
                     Ts=std::max(Ts,MIN_TS);
                     gen->setTs(Ts);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="verbosity")
                 {
                     lock_guard<mutex> lg(mtx);
                     verbosity=cmd.get(2).asInt8();
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="mode")
                 {
@@ -1015,7 +1015,7 @@ public:
                     Property p=prepareSolverOptions("mode",mode);
 
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="torso_heave")
                 {
@@ -1023,7 +1023,7 @@ public:
                     Property p=prepareSolverOptions("torso_heave",torso_heave);
 
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="lower_arm_heave")
                 {
@@ -1031,7 +1031,7 @@ public:
                     Property p=prepareSolverOptions("lower_arm_heave",lower_arm_heave);
 
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="tol")
                 {
@@ -1039,7 +1039,7 @@ public:
                     Property p=prepareSolverOptions("tol",tol);
 
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="constr_tol")
                 {
@@ -1047,43 +1047,43 @@ public:
                     Property p=prepareSolverOptions("constr_tol",constr_tol);
 
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
             }
         }
         else if (cmd.size()==2)
         {
-            if (cmd_0==Vocab::encode("get"))
+            if (cmd_0==Vocab32::encode("get"))
             {
                 string cmd_1=cmd.get(1).asString();
                 if (cmd_1=="done")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addInt8(controlling?0:1);
                 }
                 else if (cmd_1=="target")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addList()=target;
                 }
                 else if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addFloat64(gen->getT());
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addFloat64(Ts);
                 }
                 else if (cmd_1=="verbosity")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addInt8(verbosity);
                 }
                 else if (cmd_1=="mode")
@@ -1093,7 +1093,7 @@ public:
                     if (solverPort.write(req,rep))
                     {
                         Value mode=parseSolverOptions(rep,"mode");
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.add(mode);
                     }
                 }
@@ -1104,7 +1104,7 @@ public:
                     if (solverPort.write(req,rep))
                     {
                         Value torso_heave=parseSolverOptions(rep,"torso_heave");
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.add(torso_heave);
                     }
                 }
@@ -1115,7 +1115,7 @@ public:
                     if (solverPort.write(req,rep))
                     {
                         Value lower_arm_heave=parseSolverOptions(rep,"lower_arm_heave");
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.add(lower_arm_heave);
                     }
                 }
@@ -1126,7 +1126,7 @@ public:
                     if (solverPort.write(req,rep))
                     {
                         Value tol=parseSolverOptions(rep,"tol");
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.add(tol);
                     }
                 }
@@ -1137,21 +1137,21 @@ public:
                     if (solverPort.write(req,rep))
                     {
                         Value constr_tol=parseSolverOptions(rep,"constr_tol");
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.add(constr_tol);
                     }
                 }
             }
-            else if (cmd_0==Vocab::encode("go"))
+            else if (cmd_0==Vocab32::encode("go"))
             {
                 if (Bottle *b=cmd.get(1).asList())
                 {
                     Property p(b->toString().c_str());
                     if (go(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
             }
-            else if (cmd_0==Vocab::encode("ask"))
+            else if (cmd_0==Vocab32::encode("ask"))
             {
                 if (Bottle *b=cmd.get(1).asList())
                 {
@@ -1159,17 +1159,17 @@ public:
                     Bottle payLoad;
                     if (ask(p,payLoad,false))
                     {
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.append(payLoad);
                     }
                     else if (payLoad.size()>0)
                     {
-                        reply.addVocab(Vocab::encode("nack"));
+                        reply.addVocab32(Vocab32::encode("nack"));
                         reply.append(payLoad);
                     }
                 }
             }
-            else if (cmd_0==Vocab::encode("askLocal"))
+            else if (cmd_0==Vocab32::encode("askLocal"))
             {
                 if (Bottle *b=cmd.get(1).asList())
                 {
@@ -1177,26 +1177,26 @@ public:
                     Bottle payLoad;
                     if (ask(p,payLoad,true))
                     {
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                         reply.append(payLoad);
                     }
                     else if (payLoad.size()>0)
                     {
-                        reply.addVocab(Vocab::encode("nack"));
+                        reply.addVocab32(Vocab32::encode("nack"));
                         reply.append(payLoad);
                     }
                 }
             }
         }
-        else if (cmd_0==Vocab::encode("stop"))
+        else if (cmd_0==Vocab32::encode("stop"))
         {
             lock_guard<mutex> lg(mtx);
             stopControl();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
         }
 
         if (reply.size()==0)
-            reply.addVocab(Vocab::encode("nack"));
+            reply.addVocab32(Vocab32::encode("nack"));
 
         return true;
     }

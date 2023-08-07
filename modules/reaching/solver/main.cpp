@@ -185,12 +185,12 @@ public:
     bool respond(const Bottle &cmd, Bottle &reply)
     {
         SolverParameters p=solver.getSolverParameters();
-        reply.addVocab(Vocab::encode("nack"));
+        reply.addVocab32(Vocab32::encode("nack"));
 
         if (cmd.check("get"))
         {
             reply.clear();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
 
             Bottle &payLoad1=reply.addList();
             payLoad1.addString("parameters");
@@ -260,7 +260,7 @@ public:
                 {
                     solver.setSolverParameters(p);
                     reply.clear();
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
             }
         }
@@ -272,7 +272,7 @@ public:
                 q[i]=payLoad->get(i).asFloat64();
 
             reply.clear();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
         }
 
         if (Bottle *payLoad=cmd.find("target").asList())
@@ -281,7 +281,7 @@ public:
             {
                 yError("wrong target size!");
                 reply.clear();
-                reply.addVocab(Vocab::encode("nack"));
+                reply.addVocab32(Vocab32::encode("nack"));
                 return true;
             }
 
@@ -306,7 +306,7 @@ public:
             x=cat(x,dcm2axis(H));
 
             reply.clear();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
 
             Bottle &payLoadJoints=reply.addList();
             payLoadJoints.addString("q");

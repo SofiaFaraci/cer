@@ -196,12 +196,12 @@ public:
             yInfo() << "Received command:" << cmd.toString();
 
         MobileSolverParameters p=solver.getSolverParameters();
-        reply.addVocab(Vocab::encode("nack"));
+        reply.addVocab32(Vocab32::encode("nack"));
 
         if (cmd.check("get"))
         {
             reply.clear();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
 
             Bottle &payLoad1=reply.addList();
             payLoad1.addString("parameters");
@@ -281,7 +281,7 @@ public:
                 {
                     solver.setSolverParameters(p);
                     reply.clear();
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
             }
         }
@@ -315,7 +315,7 @@ public:
                         {
                             yError("wrong number of superquadric obstacle parameters!");
                             reply.clear();
-                            reply.addVocab(Vocab::encode("nack"));
+                            reply.addVocab32(Vocab32::encode("nack"));
                             return true;
                         }
 
@@ -327,7 +327,7 @@ public:
                         {
                             yError("wrong number of box obstacle parameters!");
                             reply.clear();
-                            reply.addVocab(Vocab::encode("nack"));
+                            reply.addVocab32(Vocab32::encode("nack"));
                             return true;
                         }
 
@@ -344,7 +344,7 @@ public:
                 q[i]=payLoad->get(i).asFloat64();
 
             reply.clear();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
         }
 
         if (Bottle *targetList=cmd.find("target").asList())
@@ -353,7 +353,7 @@ public:
             {
                 yError("no target specified!");
                 reply.clear();
-                reply.addVocab(Vocab::encode("nack"));
+                reply.addVocab32(Vocab32::encode("nack"));
                 return true;
             }
 
@@ -365,7 +365,7 @@ public:
                 {
                     yError("wrong target list format!");
                     reply.clear();
-                    reply.addVocab(Vocab::encode("nack"));
+                    reply.addVocab32(Vocab32::encode("nack"));
                     return true;
                 }
 
@@ -373,7 +373,7 @@ public:
                 {
                     yError("wrong target size!");
                     reply.clear();
-                    reply.addVocab(Vocab::encode("nack"));
+                    reply.addVocab32(Vocab32::encode("nack"));
                     return true;
                 }
 
@@ -398,7 +398,7 @@ public:
             bool success = solver.ikin(Hd,q);
 
             reply.clear();
-            reply.addVocab(Vocab::encode(success?"ack":"nack"));
+            reply.addVocab32(Vocab32::encode(success?"ack":"nack"));
 
             Bottle &payLoadJointsList=reply.addList();
             Bottle &payLoadPoseList=reply.addList();

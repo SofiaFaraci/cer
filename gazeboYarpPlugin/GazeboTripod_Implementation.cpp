@@ -23,10 +23,10 @@ bool GazeboTripodMotionControl::getAxisName(int axis, std::string& name)
 }
 
 bool GazeboTripodMotionControl::getJointType(int axis, yarp::dev::JointTypeEnum& type)
-{ 
+{
     if (axis < 0 || axis >= (int)m_numberOfJoints) return false;
     type=VOCAB_JOINTTYPE_PRISMATIC;
-    return true; 
+    return true;
 }
 
 
@@ -131,7 +131,7 @@ bool GazeboTripodMotionControl::getEncoderAccelerations(double* accs)
 
     for(int i=0; i< m_numberOfJoints; i++)
         accs[i] = std::nan("");
-    
+
     return true;
 }
 
@@ -473,7 +473,7 @@ bool GazeboTripodMotionControl::setControlMode(const int j, const int mode)
         case VOCAB_CM_TORQUE :
         case VOCAB_CM_PWM :
         default :
-            yError() << "Mode " << yarp::os::Vocab::decode(mode) << " is not yet implemented for GazeboTripodMotionControl";
+            yError() << "Mode " << yarp::os::Vocab32::decode(mode) << " is not yet implemented for GazeboTripodMotionControl";
             ret = false;
         break;
     }

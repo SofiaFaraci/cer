@@ -40,7 +40,7 @@ public:
         isFunctionMap[TYPE_INT64 ] = &yarp::os::Value::isInt64;
         isFunctionMap[TYPE_LIST  ] = &yarp::os::Value::isList;
         isFunctionMap[TYPE_LEAF  ] = &yarp::os::Value::isLeaf;
-        isFunctionMap[TYPE_VOCAB ] = &yarp::os::Value::isVocab;
+        isFunctionMap[TYPE_VOCAB ] = &yarp::os::Value::isVocab32;
 
     }
 

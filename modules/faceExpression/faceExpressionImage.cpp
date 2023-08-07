@@ -124,7 +124,7 @@ bool FaceExpressionImageModule::configure(ResourceFinder &rf)
 
 bool FaceExpressionImageModule::respond(const Bottle& command, Bottle& reply)
 {
-    int cmd = command.get(0).asVocab();
+    int cmd = command.get(0).asVocab32();
 
     yTrace() << "Received command " << command.toString();
     switch(cmd)
@@ -182,7 +182,7 @@ bool FaceExpressionImageModule::respond(const Bottle& command, Bottle& reply)
         break;
     }
     reply.clear();
-    reply.addVocab(yarp::os::Vocab::encode("ok"));
+    reply.addVocab32(yarp::os::Vocab32::encode("ok"));
     return true;
 }
 

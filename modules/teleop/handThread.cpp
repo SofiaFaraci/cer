@@ -99,10 +99,10 @@ void HandThread::stopReaching()
     robotTargetPort.write();
 
     Bottle cmd, reply;
-    cmd.addVocab(Vocab::encode("stop"));
+    cmd.addVocab32(Vocab32::encode("stop"));
     if (robotCmdPort.write(cmd, reply))
     {
-        if (reply.get(0).asVocab() != Vocab::encode("ack"))
+        if (reply.get(0).asVocab32() != Vocab32::encode("ack"))
         {
             yError("Something went wrong while stopping");
         }

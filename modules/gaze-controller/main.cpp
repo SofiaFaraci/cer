@@ -714,17 +714,17 @@ public:
     /****************************************************************/
     bool respond(const Bottle &cmd, Bottle &reply)
     {
-        int cmd_0=cmd.get(0).asVocab();
+        int cmd_0=cmd.get(0).asVocab32();
         if (cmd.size()==3)
         {
-            if (cmd_0==Vocab::encode("set"))
+            if (cmd_0==Vocab32::encode("set"))
             {
                 string cmd_1=cmd.get(1).asString();
                 if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
                     gen->setT(cmd.get(2).asFloat64());
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="Ts")
                 {
@@ -732,7 +732,7 @@ public:
                     Ts=cmd.get(2).asFloat64();
                     Ts=std::max(Ts,MIN_TS);
                     gen->setTs(Ts);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="verbosity")
                 {
@@ -740,7 +740,7 @@ public:
                     verbosity=cmd.get(2).asInt8();
                     for (auto &s:solver)
                         s.second.setVerbosity(verbosity);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                 }
                 else if (cmd_1=="joints-limits::pitch")
                 {
@@ -748,7 +748,7 @@ public:
                     {
                         lock_guard<mutex> lg(mtx);
                         applyCustomJointsBounds(pitchLim,NULL);
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                     }
                 }
                 else if (cmd_1=="joints-limits::yaw")
@@ -757,38 +757,38 @@ public:
                     {
                         lock_guard<mutex> lg(mtx);
                         applyCustomJointsBounds(NULL,yawLim);
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                     }
                 }
             }
         }
         else if (cmd.size()==2)
         {
-            if (cmd_0==Vocab::encode("get"))
+            if (cmd_0==Vocab32::encode("get"))
             {
                 string cmd_1=cmd.get(1).asString();
                 if (cmd_1=="done")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addInt8(controlling?0:1);
                 }
                 else if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addFloat64(gen->getT());
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addFloat64(Ts);
                 }
                 else if (cmd_1=="verbosity")
                 {
                     lock_guard<mutex> lg(mtx);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addInt8(verbosity);
                 }
                 else if (cmd_1=="joints-limits::pitch")
@@ -796,7 +796,7 @@ public:
                     lock_guard<mutex> lg(mtx);
                     Vector pitchLim,yawLim;
                     getJointsBounds(pitchLim,yawLim);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addList().read(pitchLim);
                 }
                 else if (cmd_1=="joints-limits::yaw")
@@ -804,29 +804,29 @@ public:
                     lock_guard<mutex> lg(mtx);
                     Vector pitchLim,yawLim;
                     getJointsBounds(pitchLim,yawLim);
-                    reply.addVocab(Vocab::encode("ack"));
+                    reply.addVocab32(Vocab32::encode("ack"));
                     reply.addList().read(yawLim);
                 }
             }
-            else if (cmd_0==Vocab::encode("look"))
+            else if (cmd_0==Vocab32::encode("look"))
             {
                 if (Bottle *b=cmd.get(1).asList())
                 {
                     Property p(b->toString().c_str());
                     if (look(p))
-                        reply.addVocab(Vocab::encode("ack"));
+                        reply.addVocab32(Vocab32::encode("ack"));
                 }
             }
         }
-        else if (cmd_0==Vocab::encode("stop"))
+        else if (cmd_0==Vocab32::encode("stop"))
         {
             lock_guard<mutex> lg(mtx);
             stopControl();
-            reply.addVocab(Vocab::encode("ack"));
+            reply.addVocab32(Vocab32::encode("ack"));
         }
 
         if (reply.size()==0)
-            reply.addVocab(Vocab::encode("nack"));
+            reply.addVocab32(Vocab32::encode("nack"));
 
         return true;
     }
