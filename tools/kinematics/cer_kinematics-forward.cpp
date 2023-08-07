@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     string kinematics=rf.check("kinematics",Value("arm")).asString();
     string type=rf.check("type",Value("left")).asString();
-    
+
     transform(kinematics.begin(),kinematics.end(),kinematics.begin(),::tolower);
     transform(type.begin(),type.end(),type.begin(),::tolower);
 
@@ -96,12 +96,12 @@ int main(int argc, char *argv[])
         solver=new HeadSolver(headp);
         q.resize(6,0.0);
     }
-        
+
     if (Bottle *b=rf.find("q").asList())
     {
         size_t len=std::min(q.length(),(size_t)b->size());
         for (size_t i=0; i<len; i++)
-            q[i]=b->get(i).asDouble();
+            q[i]=b->get(i).asFloat64();
     }
 
     Matrix H;

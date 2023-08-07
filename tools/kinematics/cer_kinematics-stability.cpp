@@ -61,10 +61,10 @@ int main(int argc, char *argv[])
     // command-line options
     string arm_type=rf.check("arm-type",Value("left")).asString();
     string grasp_type=rf.check("grasp-type",Value("top")).asString();
-    double table_height=rf.check("table-height",Value(0.7)).asDouble();
-    double external_weight=rf.check("external-weight",Value(2.0)).asDouble();
-    double floor_z=rf.check("floor-z",Value(-0.16)).asDouble();
-    double step=rf.check("step",Value(0.05)).asDouble();
+    double table_height=rf.check("table-height",Value(0.7)).asFloat64();
+    double external_weight=rf.check("external-weight",Value(2.0)).asFloat64();
+    double floor_z=rf.check("floor-z",Value(-0.16)).asFloat64();
+    double step=rf.check("step",Value(0.05)).asFloat64();
 
     // define solver and its parameters
     ArmParameters armp(arm_type);
@@ -90,11 +90,11 @@ int main(int argc, char *argv[])
         ud[1]=1.0;
     else
         ud[0]=-1.0;
-    ud[3]=M_PI/2.0;     
+    ud[3]=M_PI/2.0;
 
     Matrix Hd=axis2dcm(ud);
     Hd(2,3)=table_height+floor_z;
-    
+
     // timing statistics
     double maxT=0.0;
     double minT=std::numeric_limits<double>::max();

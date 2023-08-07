@@ -42,7 +42,7 @@ class Controller : public RFModule
     IPositionControl *ipos;
     IPositionDirect  *iposd;
 
-    minJerkTrajGen *gen;    
+    minJerkTrajGen *gen;
     BufferedPort<Vector> outPort;
 
     string type;
@@ -63,13 +63,13 @@ public:
         string part=rf.check("part",Value("left_upper_arm")).asString();
         type=rf.check("type",Value("stairs")).asString();
         joint=rf.check("joint",Value(0)).asInt();
-        Ts=rf.check("Ts",Value(0.01)).asDouble();
-        T=rf.check("T",Value(4.0)).asDouble();
+        Ts=rf.check("Ts",Value(0.01)).asFloat64();
+        T=rf.check("T",Value(4.0)).asFloat64();
 
         Property option;
         option.put("device","remote_controlboard");
         option.put("remote","/"+robot+"/"+part);
-        option.put("local","/cer_log_joint/"+part); 
+        option.put("local","/cer_log_joint/"+part);
         if (!driver.open(option))
         {
             yError("Unable to connect to %s",("/"+robot+"/"+part).c_str());
@@ -89,7 +89,7 @@ public:
 
         bounds[0]+=tmp;
         bounds[1]-=tmp;
-        
+
         qd.resize(1);
         ienc->getEncoder(joint,&qd[0]);
         imod->setControlMode(joint,VOCAB_CM_POSITION_DIRECT);
@@ -105,7 +105,7 @@ public:
 
     /****************************************************************/
     bool close()
-    {        
+    {
         if (!outPort.isClosed())
             outPort.close();
 
@@ -140,7 +140,7 @@ public:
             ref=qd;
         else
         {
-            gen->computeNextValues(qd); 
+            gen->computeNextValues(qd);
             ref=gen->getPos();
         }
 
@@ -150,7 +150,7 @@ public:
         info.resize(2);
         info[0]=ref[0];
         ienc->getEncoder(joint,&info[1]);
-        outPort.writeStrict();        
+        outPort.writeStrict();
 
         return true;
     }
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
         yError("YARP server not available!");
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

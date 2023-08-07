@@ -34,7 +34,7 @@ public:
         err_msgs     [TYPE_VOCAB ] = "a vocab";
         isFunctionMap[TYPE_STRING] = &yarp::os::Value::isString;
         isFunctionMap[TYPE_BOOL  ] = &yarp::os::Value::isBool;
-        isFunctionMap[TYPE_DOUBLE] = &yarp::os::Value::isDouble;
+        isFunctionMap[TYPE_DOUBLE] = &yarp::os::Value::isFloat64;
         isFunctionMap[TYPE_BLOB  ] = &yarp::os::Value::isBlob;
         isFunctionMap[TYPE_INT   ] = &yarp::os::Value::isInt;
         isFunctionMap[TYPE_INT64 ] = &yarp::os::Value::isInt64;

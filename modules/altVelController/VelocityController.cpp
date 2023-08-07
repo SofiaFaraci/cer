@@ -68,9 +68,9 @@ public:
         vel[0] = vlf; vel[1] = vlt;
 
         pVelCtrl[ LEFT_HAND]->velocityMove(vel);
-        
+
         vel[0] = vrf; vel[1] = vrt;
-        
+
         pVelCtrl[RIGHT_HAND]->velocityMove(vel);
     }
 
@@ -121,7 +121,7 @@ R1Driver::R1Driver(std::string robotName) : mRobotName(robotName)
     for (int part = TORSO; part < NUM_R1_PARTS; ++part)
     {
         pEncFbk[part] = NULL;
-        
+
         pPosCtrl[part] = NULL;
         pVelCtrl[part] = NULL;
         pDirCtrl[part] = NULL;
@@ -245,7 +245,7 @@ void R1Driver::getPos(cer::robot_model::Matrix &q)
 
     pEncFbk[RIGHT_ARM]->getEncoders(enc);
 
-    q(12) = enc[0]; q(13) = enc[1]; q(14) = enc[2]; q(15) = enc[3]; q(16) = enc[4]; 
+    q(12) = enc[0]; q(13) = enc[1]; q(14) = enc[2]; q(15) = enc[3]; q(16) = enc[4];
 
     pEncFbk[RIGHT_TRIPOD]->getEncoders(enc);
 
@@ -405,7 +405,7 @@ bool R1ControlModule::threadInit()
 #endif
 
 #ifdef JOYSTICK
-    //SDL_INIT_TIMER SDL_INIT_HAPTIC SDL_INIT_GAMECONTROLLER 
+    //SDL_INIT_TIMER SDL_INIT_HAPTIC SDL_INIT_GAMECONTROLLER
 
     // SDL
     if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) == -1) return false;
@@ -516,7 +516,7 @@ void R1ControlModule::run()
 #ifdef JOYSTICK
 
     SDL_JoystickUpdate();
-    
+
     //////////////////////////////////////////////////////////////
     // enable left/right side
     unsigned char L_enable_new = SDL_JoystickGetButton(mStick, 8);
@@ -703,7 +703,7 @@ void R1ControlModule::run()
     else
     {
         r1Ctrl->velControl(qphantom, qdot, NULL, NULL, NULL, NULL);
-    
+
         TargetL = HandL;
         TargetR = HandR;
 
@@ -743,7 +743,7 @@ void R1ControlModule::run()
 
     for (int j = 0; j < 22; ++j)
     {
-        qdot_del[j][index] = qdot(j);   
+        qdot_del[j][index] = qdot(j);
         qfbk_del[j][index] = qfbk(j);
     }
 
@@ -867,17 +867,17 @@ void R1ControlModule::sendCOM(const std::string& name, int R, int G, int B, cer:
     botR.clear();
     botR.addString("object_with_label");
     botR.addString(name); botR.addString(name);
-    botR.addDouble(size);
-    botR.addDouble(0.0);
-    botR.addDouble(0.0);
-    botR.addDouble(P.x*1000.0);
-    botR.addDouble(P.y*1000.0);
-    botR.addDouble(P.z*1000.0);
+    botR.addFloat64(size);
+    botR.addFloat64(0.0);
+    botR.addFloat64(0.0);
+    botR.addFloat64(P.x*1000.0);
+    botR.addFloat64(P.y*1000.0);
+    botR.addFloat64(P.z*1000.0);
 
-    botR.addDouble(0.0); botR.addDouble(0.0); botR.addDouble(0.0);
-    
+    botR.addFloat64(0.0); botR.addFloat64(0.0); botR.addFloat64(0.0);
+
     botR.addInt(R); botR.addInt(G); botR.addInt(B);
-    botR.addDouble(alpha);
+    botR.addFloat64(alpha);
     //botR.addString("WORLD");
     portObjects.writeStrict();
 }
@@ -887,19 +887,19 @@ void R1ControlModule::sendTarget(const char* name, int R, int G, int B, double x
     yarp::os::Bottle& botR=portObjects.prepare();
     botR.clear();
     botR.addString("object"); botR.addString(name);
-    botR.addDouble(size);
-    botR.addDouble(0.0);
-    botR.addDouble(0.0);
-    botR.addDouble(x*1000.0);
-    botR.addDouble(y*1000.0);
-    botR.addDouble(z*1000.0);
+    botR.addFloat64(size);
+    botR.addFloat64(0.0);
+    botR.addFloat64(0.0);
+    botR.addFloat64(x*1000.0);
+    botR.addFloat64(y*1000.0);
+    botR.addFloat64(z*1000.0);
 
-    botR.addDouble(rx); 
-    botR.addDouble(ry); 
-    botR.addDouble(rz);
+    botR.addFloat64(rx);
+    botR.addFloat64(ry);
+    botR.addFloat64(rz);
 
     botR.addInt(R); botR.addInt(G); botR.addInt(B);
-    botR.addDouble(alpha);
+    botR.addFloat64(alpha);
     //botR.addString("WORLD");
     portObjects.writeStrict();
 }
@@ -909,19 +909,19 @@ void R1ControlModule::sendCover(const std::string& name, double x, double y, dou
     yarp::os::Bottle& botR = portObjects.prepare();
     botR.clear();
     botR.addString("object"); botR.addString(name);
-    botR.addDouble(size*1000.0);
-    botR.addDouble(0.0);
-    botR.addDouble(0.0);
-    botR.addDouble(x*1000.0);
-    botR.addDouble(y*1000.0);
-    botR.addDouble(z*1000.0);
+    botR.addFloat64(size*1000.0);
+    botR.addFloat64(0.0);
+    botR.addFloat64(0.0);
+    botR.addFloat64(x*1000.0);
+    botR.addFloat64(y*1000.0);
+    botR.addFloat64(z*1000.0);
 
-    botR.addDouble(360.0);
-    botR.addDouble(360.0);
-    botR.addDouble(360.0);
+    botR.addFloat64(360.0);
+    botR.addFloat64(360.0);
+    botR.addFloat64(360.0);
 
     botR.addInt(255); botR.addInt(255); botR.addInt(255);
-    botR.addDouble(1.0);
+    botR.addFloat64(1.0);
     //botR.addString("WORLD");
     portObjects.writeStrict();
 }

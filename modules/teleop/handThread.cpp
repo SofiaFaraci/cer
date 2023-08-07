@@ -21,12 +21,12 @@ void HandThread::printState()
 
 bool HandThread::openControlBoards(yarp::os::Searchable& rf)
 {
-    gain            = rf.check("gain",     Value(1)).asDouble();
+    gain            = rf.check("gain",     Value(1)).asFloat64();
     wrist_heave     = 0.02;
 
     if (rf.check("wrist-heave"))
     {
-        wrist_heave = rf.find("wrist-heave").asDouble();
+        wrist_heave = rf.find("wrist-heave").asFloat64();
         mode        = "full_pose+no_torso_heave";
     }
     else
@@ -115,7 +115,7 @@ void HandThread::stopReaching()
 
 void HandThread::goToPose(const Vector &xd, const Vector &od)
 {
-    
+
     Vector payLoad;
     //payLoad.push_back(0.0); // uncontrolled torso-heave
     //payLoad.push_back(wrist_heave);
@@ -133,11 +133,11 @@ void HandThread::goToPose(const Vector &xd, const Vector &od)
 
     Bottle& btorso_heave = list.addList();
     btorso_heave.addString("torso_heave");
-    btorso_heave.addDouble(0.0);
+    btorso_heave.addFloat64(0.0);
 
     Bottle& blower_arm_heave = list.addList();
     blower_arm_heave.addString("lower_arm_heave");
-    blower_arm_heave.addDouble(wrist_heave);
+    blower_arm_heave.addFloat64(wrist_heave);
 
     Property& prop = robotTargetPort.prepare();
     prop.clear();
@@ -219,12 +219,12 @@ void HandThread::updateGazebo(const Vector& xd, const Vector& od)
         b.clear();
         b.addString("setPose");
         b.addString("frame22");
-        b.addDouble(xd[0]);
-        b.addDouble(xd[1]);
-        b.addDouble(xd[2]);
-        b.addDouble(rpy[0]);
-        b.addDouble(rpy[1]);
-        b.addDouble(rpy[2]);
+        b.addFloat64(xd[0]);
+        b.addFloat64(xd[1]);
+        b.addFloat64(xd[2]);
+        b.addFloat64(rpy[0]);
+        b.addFloat64(rpy[1]);
+        b.addFloat64(rpy[2]);
         b.addString("frame11::link");
         gazeboPort.write();
     }
@@ -281,12 +281,12 @@ void HandThread::reachingHandler(const bool dragging_switch, const Matrix& pose)
 
             Target = x0 + (pos - pos0);
             //r      = getRad(cur_x[0], cur_x[1]);
-           
+
             if (getRad(Target[0], Target[1]) > 0.35)//|| getRad(Target[0], Target[1]) > getRad(x0[0], x0[1]))
             {
                 xd = Target;
             }
-            else 
+            else
             {
                 double t = atan2(Target[1], Target[0]);
                 xd = x0 = mVector(0.35 * cos(t), 0.37 * sin(t), cur_x[2]);
@@ -294,8 +294,8 @@ void HandThread::reachingHandler(const bool dragging_switch, const Matrix& pose)
                 pos0  = pose.getCol(3);
                 pos0.pop_back();
             }
-            
-            
+
+
             xd.push_back(1);
             H0(0,3)   = x0[0];
             H0(1,3)   = x0[1];
@@ -316,13 +316,13 @@ void HandThread::reachingHandler(const bool dragging_switch, const Matrix& pose)
                 xd.pop_back();
                 if (button2)
                 {
-                    
+
                     pose0.setCol(3, pose.getCol(3));
                     pos0 = pose.getCol(3);
                     pos0.pop_back();
                     xd = cur_x;
                     x0 = xd;
-                    
+
                     goToPose(cur_x, od);
                 }
                 else
@@ -333,7 +333,7 @@ void HandThread::reachingHandler(const bool dragging_switch, const Matrix& pose)
                     pose0.setCol(2, pose.getCol(2));
                     goToPose(xd, cur_o);
                 }
-                
+
             }
             else if (reachState)
             {

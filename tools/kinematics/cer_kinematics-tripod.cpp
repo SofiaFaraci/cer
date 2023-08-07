@@ -91,11 +91,11 @@ public:
             }
 
             Vector ud(4);
-            double zd=ibData->get(0).asDouble();
-            ud[0]=ibData->get(1).asDouble();
-            ud[1]=ibData->get(2).asDouble();
-            ud[2]=ibData->get(3).asDouble();
-            ud[3]=ibData->get(4).asDouble();
+            double zd=ibData->get(0).asFloat64();
+            ud[0]=ibData->get(1).asFloat64();
+            ud[1]=ibData->get(2).asFloat64();
+            ud[2]=ibData->get(3).asFloat64();
+            ud[3]=ibData->get(4).asFloat64();
             solver.setInitialGuess(rho);
             solver.ikin(zd,ud,rho);
 
@@ -109,7 +109,7 @@ public:
             oPort.prepare().read(ref);
             oPort.write();
         }
-        
+
         return true;
     }
 };
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
         yError()<<"YARP server not available!";
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

@@ -214,19 +214,19 @@ public:
 
             Bottle &torso_heave=payLoad2.addList();
             torso_heave.addString("torso_heave");
-            torso_heave.addDouble(p.torso_heave);
+            torso_heave.addFloat64(p.torso_heave);
 
             Bottle &lower_arm_heave=payLoad2.addList();
             lower_arm_heave.addString("lower_arm_heave");
-            lower_arm_heave.addDouble(p.lower_arm_heave);
+            lower_arm_heave.addFloat64(p.lower_arm_heave);
 
             Bottle &tol=payLoad2.addList();
             tol.addString("tol");
-            tol.addDouble(p.tol);
+            tol.addFloat64(p.tol);
 
             Bottle &constr_tol=payLoad2.addList();
             constr_tol.addString("constr_tol");
-            constr_tol.addDouble(p.constr_tol);
+            constr_tol.addFloat64(p.constr_tol);
 
             return true;
         }
@@ -247,7 +247,7 @@ public:
 
                 if (parameters->check("torso_heave"))
                 {
-                    p.torso_heave=parameters->find("torso_heave").asDouble();
+                    p.torso_heave=parameters->find("torso_heave").asFloat64();
                     if(verbosity>0)
                         yInfo() << "Torso heave set:" << p.torso_heave;
                     ack=true;
@@ -255,7 +255,7 @@ public:
 
                 if (parameters->check("lower_arm_heave"))
                 {
-                    p.lower_arm_heave=parameters->find("lower_arm_heave").asDouble();
+                    p.lower_arm_heave=parameters->find("lower_arm_heave").asFloat64();
                     if(verbosity>0)
                         yInfo() << "Lower arm heave set:" << p.lower_arm_heave;
                     ack=true;
@@ -263,7 +263,7 @@ public:
 
                 if (parameters->check("tol"))
                 {
-                    p.tol=parameters->find("tol").asDouble();
+                    p.tol=parameters->find("tol").asFloat64();
                     if(verbosity>0)
                         yInfo() << "Tolerance set:" << p.tol;
                     ack=true;
@@ -271,7 +271,7 @@ public:
 
                 if (parameters->check("constr_tol"))
                 {
-                    p.constr_tol=parameters->find("constr_tol").asDouble();
+                    p.constr_tol=parameters->find("constr_tol").asFloat64();
                     if(verbosity>0)
                         yInfo() << "Constraints tolerance set:" << p.constr_tol;
                     ack=true;
@@ -292,7 +292,7 @@ public:
             {
                 Vector domain(parameters->size());
                 for(size_t i=0; i<parameters->size() ; i++)
-                    domain[i] = parameters->get(i).asDouble();
+                    domain[i] = parameters->get(i).asFloat64();
 
                 solver.setDomain(domain);
                 if(verbosity>0)
@@ -341,7 +341,7 @@ public:
         {
             int len=std::min(payLoad->size(),q.length());
             for (int i=0; i<len; i++)
-                q[i]=payLoad->get(i).asDouble();
+                q[i]=payLoad->get(i).asFloat64();
 
             reply.clear();
             reply.addVocab(Vocab::encode("ack"));
@@ -378,13 +378,13 @@ public:
                 }
 
                 Vector xd(3),ud(4);
-                xd[0]=target->get(0).asDouble();
-                xd[1]=target->get(1).asDouble();
-                xd[2]=target->get(2).asDouble();
-                ud[0]=target->get(3).asDouble();
-                ud[1]=target->get(4).asDouble();
-                ud[2]=target->get(5).asDouble();
-                ud[3]=target->get(6).asDouble();
+                xd[0]=target->get(0).asFloat64();
+                xd[1]=target->get(1).asFloat64();
+                xd[2]=target->get(2).asFloat64();
+                ud[0]=target->get(3).asFloat64();
+                ud[1]=target->get(4).asFloat64();
+                ud[2]=target->get(5).asFloat64();
+                ud[3]=target->get(6).asFloat64();
 
                 if(verbosity>0)
                     yInfo() << "Target" << i << "set: pos" << xd.toString() << "orient" << ud.toString();

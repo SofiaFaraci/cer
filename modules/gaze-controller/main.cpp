@@ -80,7 +80,7 @@ class Controller : public RFModule
     map<string,HeadSolver> solver;
     map<string,Matrix> intrinsics;
     minJerkTrajGen* gen;
-    
+
     BufferedPort<Property> statePort;
     TargetPort targetPort;
     RpcServer rpcPort;
@@ -119,13 +119,13 @@ class Controller : public RFModule
                     group.check("cx") && group.check("cy"))
                 {
                     Matrix K=eye(3,4);
-                    K(0,0)=group.find("fx").asDouble();
-                    K(1,1)=group.find("fy").asDouble();
-                    K(0,2)=group.find("cx").asDouble();
-                    K(1,2)=group.find("cy").asDouble();
-                    
+                    K(0,0)=group.find("fx").asFloat64();
+                    K(1,1)=group.find("fy").asFloat64();
+                    K(0,2)=group.find("cx").asFloat64();
+                    K(1,2)=group.find("cy").asFloat64();
+
                     yInfo("%s",K.toString(3,3).c_str());
-                    intrinsics[camera]=pinv(K.transposed()).transposed(); 
+                    intrinsics[camera]=pinv(K.transposed()).transposed();
                     ok=true;
                 }
             }
@@ -188,12 +188,12 @@ class Controller : public RFModule
                 imod->setControlModes(posDirectMode.data());
                 break;
             }
-        }        
+        }
     }
 
     /****************************************************************/
     void stopControl()
-    {        
+    {
         ipos->stop();
         controlling=false;
     }
@@ -220,7 +220,7 @@ class Controller : public RFModule
     {
         for (map<string,HeadSolver>::iterator it=solver.begin();
              it!=solver.end(); it++)
-        {            
+        {
             yInfo("##### Aligning joints bounds for control frame \"%s\"",
                   it->first.c_str());
             HeadSolver &s=it->second;
@@ -288,7 +288,7 @@ class Controller : public RFModule
             HeadSolver &s=it->second;
 
             HeadParameters p=s.getHeadParameters();
-            iKinChain &chain=*p.head.asChain();            
+            iKinChain &chain=*p.head.asChain();
 
             int i=0;
             if (pitchLim!=NULL)
@@ -296,7 +296,7 @@ class Controller : public RFModule
                 bool doPrint=false;
                 if (pitchLim->size()>0)
                 {
-                    double val=pitchLim->get(0).asDouble();
+                    double val=pitchLim->get(0).asFloat64();
                     val=std::min(std::max(val,pitchPhy[0]),pitchPhy[1]);
                     chain[1+i].setMin(CTRL_DEG2RAD*val);
                     doPrint=true;
@@ -304,7 +304,7 @@ class Controller : public RFModule
 
                 if (pitchLim->size()>1)
                 {
-                    double val=pitchLim->get(1).asDouble();
+                    double val=pitchLim->get(1).asFloat64();
                     val=std::min(std::max(val,pitchPhy[0]),pitchPhy[1]);
                     chain[1+i].setMax(CTRL_DEG2RAD*val);
                     doPrint=true;
@@ -322,7 +322,7 @@ class Controller : public RFModule
                 bool doPrint=false;
                 if (yawLim->size()>0)
                 {
-                    double val=yawLim->get(0).asDouble();
+                    double val=yawLim->get(0).asFloat64();
                     val=std::min(std::max(val,yawPhy[0]),yawPhy[1]);
                     chain[1+i].setMin(CTRL_DEG2RAD*val);
                     doPrint=true;
@@ -330,7 +330,7 @@ class Controller : public RFModule
 
                 if (yawLim->size()>1)
                 {
-                    double val=yawLim->get(1).asDouble();
+                    double val=yawLim->get(1).asFloat64();
                     val=std::min(std::max(val,yawPhy[0]),yawPhy[1]);
                     chain[1+i].setMax(CTRL_DEG2RAD*val);
                     doPrint=true;
@@ -387,7 +387,7 @@ public:
             HeadParameters p(frame);
             solver[frame].setHeadParameters(p);
         }
-        control_frame="gaze"; 
+        control_frame="gaze";
     }
 
     /****************************************************************/
@@ -396,9 +396,9 @@ public:
         string robot=rf.check("robot",Value("cer")).asString();
         bool get_bounds=(rf.check("get-bounds",Value("on")).asString()=="on");
         verbosity=rf.check("verbosity",Value(0)).asInt();
-        stop_threshold=rf.check("stop-threshold",Value(2.0)).asDouble();
-        double T=rf.check("T",Value(1.0)).asDouble();
-        Ts=rf.check("Ts",Value(MIN_TS)).asDouble();
+        stop_threshold=rf.check("stop-threshold",Value(2.0)).asFloat64();
+        double T=rf.check("T",Value(1.0)).asFloat64();
+        Ts=rf.check("Ts",Value(MIN_TS)).asFloat64();
         Ts=std::max(Ts,MIN_TS);
 
         Bottle *pitchLim=NULL; Bottle *yawLim=NULL;
@@ -413,7 +413,7 @@ public:
 
         option.put("device","remote_controlboard");
         option.put("remote","/"+robot+"/torso_tripod");
-        option.put("local","/cer_gaze-controller/torso_tripod"); 
+        option.put("local","/cer_gaze-controller/torso_tripod");
         if (!drivers[0].open(option))
         {
             yError("Unable to connect to %s",("/"+robot+"/torso_tripod").c_str());
@@ -506,17 +506,17 @@ public:
             stopControl();
 
         if (!targetPort.isClosed())
-            targetPort.close(); 
+            targetPort.close();
 
         if (!statePort.isClosed())
             statePort.close();
 
         if (!rpcPort.asPort().isOpen())
-            rpcPort.close(); 
-        
+            rpcPort.close();
+
         for (int i=0; i<3; i++)
             if (drivers[i].isValid())
-                drivers[i].close(); 
+                drivers[i].close();
 
         delete gen;
         return true;
@@ -549,12 +549,12 @@ public:
             string control_frame_=request.find("control-frame").asString();
             const set<string>::iterator it=avFrames.find(control_frame_);
             if (it==avFrames.end())
-                yError("Unrecognized control frame type \"%s\"!",control_frame_.c_str());                
+                yError("Unrecognized control frame type \"%s\"!",control_frame_.c_str());
             else
                 control_frame=control_frame_;
         }
 
-        bool doControl=false;        
+        bool doControl=false;
         Vector xd(3);
         Vector q;
 
@@ -568,9 +568,9 @@ public:
         {
             if (target_location->size()>=3)
             {
-                xd[0]=target_location->get(0).asDouble();
-                xd[1]=target_location->get(1).asDouble();
-                xd[2]=target_location->get(2).asDouble();
+                xd[0]=target_location->get(0).asFloat64();
+                xd[1]=target_location->get(1).asFloat64();
+                xd[2]=target_location->get(2).asFloat64();
 
                 q=getEncoders();
                 doControl=true;
@@ -583,10 +583,10 @@ public:
             if (target_location->size()>=2)
             {
                 Vector azi(4,0.0); azi[2]=1.0;
-                azi[3]=CTRL_DEG2RAD*target_location->get(0).asDouble();
+                azi[3]=CTRL_DEG2RAD*target_location->get(0).asFloat64();
 
                 Vector ele(4,0.0); ele[1]=-1.0;
-                ele[3]=CTRL_DEG2RAD*target_location->get(1).asDouble();
+                ele[3]=CTRL_DEG2RAD*target_location->get(1).asFloat64();
 
                 Matrix Hee;
                 Vector q0(6,0.0);
@@ -613,16 +613,16 @@ public:
                 yError("Unrecognized image type \"%s\"!",image.c_str());
             else if (intrinsics.find(image)==intrinsics.end())
                 yError("Intrinsics not configured for image type \"%s\"!",image.c_str());
-            else 
-            {                    
+            else
+            {
                 if (target_location->size()>=2)
                 {
                     Vector p(3,1.0);
                     if (target_location->size()>=3)
-                        p[2]=target_location->get(2).asDouble();
+                        p[2]=target_location->get(2).asFloat64();
 
-                    p[0]=p[2]*target_location->get(0).asDouble(); 
-                    p[1]=p[2]*target_location->get(1).asDouble();
+                    p[0]=p[2]*target_location->get(0).asFloat64();
+                    p[1]=p[2]*target_location->get(1).asFloat64();
 
                     Matrix Hee;
                     q=getEncoders();
@@ -666,11 +666,11 @@ public:
     bool updateModule()
     {
         lock_guard<mutex> lg(mtx);
-        getCurrentMode();        
+        getCurrentMode();
 
         double timeStamp;
         Vector q=getEncoders(&timeStamp);
-     
+
         if (timeStamp>=0.0)
             txInfo.update(timeStamp);
         else
@@ -690,7 +690,7 @@ public:
 
             if (areJointsHealthy())
             {
-                setPositionDirectMode(); 
+                setPositionDirectMode();
                 iposd->setPositions(ref.data());
 
                 Vector q_=q.subVector(4,5);
@@ -704,7 +704,7 @@ public:
             else
             {
                 yWarning("Detected joints in HW_FAULT and/or IDLE => stopping control");
-                stopControl();                
+                stopControl();
             }
         }
 
@@ -723,13 +723,13 @@ public:
                 if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
-                    gen->setT(cmd.get(2).asDouble());
+                    gen->setT(cmd.get(2).asFloat64());
                     reply.addVocab(Vocab::encode("ack"));
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
-                    Ts=cmd.get(2).asDouble();
+                    Ts=cmd.get(2).asFloat64();
                     Ts=std::max(Ts,MIN_TS);
                     gen->setTs(Ts);
                     reply.addVocab(Vocab::encode("ack"));
@@ -777,13 +777,13 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(gen->getT());
+                    reply.addFloat64(gen->getT());
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(Ts);
+                    reply.addFloat64(Ts);
                 }
                 else if (cmd_1=="verbosity")
                 {
@@ -796,7 +796,7 @@ public:
                     lock_guard<mutex> lg(mtx);
                     Vector pitchLim,yawLim;
                     getJointsBounds(pitchLim,yawLim);
-                    reply.addVocab(Vocab::encode("ack"));                    
+                    reply.addVocab(Vocab::encode("ack"));
                     reply.addList().read(pitchLim);
                 }
                 else if (cmd_1=="joints-limits::yaw")
@@ -804,7 +804,7 @@ public:
                     lock_guard<mutex> lg(mtx);
                     Vector pitchLim,yawLim;
                     getJointsBounds(pitchLim,yawLim);
-                    reply.addVocab(Vocab::encode("ack"));                    
+                    reply.addVocab(Vocab::encode("ack"));
                     reply.addList().read(yawLim);
                 }
             }
@@ -826,8 +826,8 @@ public:
         }
 
         if (reply.size()==0)
-            reply.addVocab(Vocab::encode("nack")); 
-        
+            reply.addVocab(Vocab::encode("nack"));
+
         return true;
     }
 };
@@ -850,7 +850,7 @@ int main(int argc, char *argv[])
         yError("YARP server not available!");
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

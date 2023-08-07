@@ -62,8 +62,8 @@ public:
     bool configure(ResourceFinder &rf)
     {
         string arm_type=rf.check("arm-type",Value("left")).asString();
-        double external_weight=rf.check("external-weight",Value(2.0)).asDouble();
-        double floor_z=rf.check("floor-z",Value(-0.16)).asDouble();
+        double external_weight=rf.check("external-weight",Value(2.0)).asFloat64();
+        double floor_z=rf.check("floor-z",Value(-0.16)).asFloat64();
         int verbosity=rf.check("verbosity",Value(1)).asInt();
         bool enable_callback=rf.check("enable-callback");
 
@@ -80,7 +80,7 @@ public:
         solver.setSolverParameters(p);
         solver.setVerbosity(verbosity);
         if (enable_callback)
-            solver.enableIterateCallback(callback); 
+            solver.enableIterateCallback(callback);
 
         armCOM=new ArmCOM(solver,external_weight,floor_z);
         return true;
@@ -119,15 +119,15 @@ public:
             Vector xd(3),ud(4);
 
             mode=target->get(0).asString();
-            hd1=target->get(1).asDouble();
-            hd2=target->get(2).asDouble();
-            xd[0]=target->get(3).asDouble();
-            xd[1]=target->get(4).asDouble();
-            xd[2]=target->get(5).asDouble();
-            ud[0]=target->get(6).asDouble();
-            ud[1]=target->get(7).asDouble();
-            ud[2]=target->get(8).asDouble();
-            ud[3]=target->get(9).asDouble();
+            hd1=target->get(1).asFloat64();
+            hd2=target->get(2).asFloat64();
+            xd[0]=target->get(3).asFloat64();
+            xd[1]=target->get(4).asFloat64();
+            xd[2]=target->get(5).asFloat64();
+            ud[0]=target->get(6).asFloat64();
+            ud[1]=target->get(7).asFloat64();
+            ud[2]=target->get(8).asFloat64();
+            ud[3]=target->get(9).asFloat64();
 
             bool warm_start=false;
             if (target->size()>=11)
@@ -161,7 +161,7 @@ public:
             portSolution.prepare().read(solution);
             portSolution.writeStrict();
         }
-        
+
         return true;
     }
 };
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
         yError()<<"YARP server not available!";
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

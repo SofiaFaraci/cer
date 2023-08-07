@@ -40,7 +40,7 @@ using namespace cer::kinematics;
 
 /****************************************************************/
 class IKSolver : public RFModule
-{    
+{
     ArmSolver solver;
     RpcServer rpcPort;
     Vector q;
@@ -105,10 +105,10 @@ class IKSolver : public RFModule
 
         if (getBounds("/"+robot+"/"+arm_type+"_arm","/cer_reaching-solver/"+arm_type+"/"+arm_type+"_arm",lim))
         {
-            iKinChain &chain=*p.upper_arm.asChain(); 
+            iKinChain &chain=*p.upper_arm.asChain();
             for (int i=0; i<5; i++)
             {
-                chain[1+i].setMin(CTRL_DEG2RAD*lim(i,0)); 
+                chain[1+i].setMin(CTRL_DEG2RAD*lim(i,0));
                 chain[1+i].setMax(CTRL_DEG2RAD*lim(i,1));
 
                 yInfo("limits of %s part: joint %d=[%g,%g] [deg]",
@@ -203,23 +203,23 @@ public:
 
             Bottle &torso_heave=payLoad2.addList();
             torso_heave.addString("torso_heave");
-            torso_heave.addDouble(p.torso_heave);
+            torso_heave.addFloat64(p.torso_heave);
 
             Bottle &lower_arm_heave=payLoad2.addList();
             lower_arm_heave.addString("lower_arm_heave");
-            lower_arm_heave.addDouble(p.lower_arm_heave);
+            lower_arm_heave.addFloat64(p.lower_arm_heave);
 
             Bottle &tol=payLoad2.addList();
             tol.addString("tol");
-            tol.addDouble(p.tol);
+            tol.addFloat64(p.tol);
 
             Bottle &constr_tol=payLoad2.addList();
             constr_tol.addString("constr_tol");
-            constr_tol.addDouble(p.constr_tol);
+            constr_tol.addFloat64(p.constr_tol);
 
             return true;
         }
-        
+
         if (cmd.check("parameters"))
         {
             if (Bottle *parameters=cmd.find("parameters").asList())
@@ -234,25 +234,25 @@ public:
 
                 if (parameters->check("torso_heave"))
                 {
-                    p.torso_heave=parameters->find("torso_heave").asDouble();
+                    p.torso_heave=parameters->find("torso_heave").asFloat64();
                     ack=true;
                 }
 
                 if (parameters->check("lower_arm_heave"))
                 {
-                    p.lower_arm_heave=parameters->find("lower_arm_heave").asDouble();
+                    p.lower_arm_heave=parameters->find("lower_arm_heave").asFloat64();
                     ack=true;
                 }
 
                 if (parameters->check("tol"))
                 {
-                    p.tol=parameters->find("tol").asDouble();
+                    p.tol=parameters->find("tol").asFloat64();
                     ack=true;
                 }
 
                 if (parameters->check("constr_tol"))
                 {
-                    p.constr_tol=parameters->find("constr_tol").asDouble();
+                    p.constr_tol=parameters->find("constr_tol").asFloat64();
                     ack=true;
                 }
 
@@ -269,7 +269,7 @@ public:
         {
             int len=std::min(payLoad->size(),q.length());
             for (int i=0; i<len; i++)
-                q[i]=payLoad->get(i).asDouble();
+                q[i]=payLoad->get(i).asFloat64();
 
             reply.clear();
             reply.addVocab(Vocab::encode("ack"));
@@ -284,15 +284,15 @@ public:
                 reply.addVocab(Vocab::encode("nack"));
                 return true;
             }
-            
+
             Vector xd(3),ud(4);
-            xd[0]=payLoad->get(0).asDouble();
-            xd[1]=payLoad->get(1).asDouble();
-            xd[2]=payLoad->get(2).asDouble();
-            ud[0]=payLoad->get(3).asDouble();
-            ud[1]=payLoad->get(4).asDouble();
-            ud[2]=payLoad->get(5).asDouble();
-            ud[3]=payLoad->get(6).asDouble();
+            xd[0]=payLoad->get(0).asFloat64();
+            xd[1]=payLoad->get(1).asFloat64();
+            xd[2]=payLoad->get(2).asFloat64();
+            ud[0]=payLoad->get(3).asFloat64();
+            ud[1]=payLoad->get(4).asFloat64();
+            ud[2]=payLoad->get(5).asFloat64();
+            ud[3]=payLoad->get(6).asFloat64();
 
             Matrix Hd=axis2dcm(ud);
             Hd.setSubcol(xd,0,3);
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
         yError("YARP server not available!");
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

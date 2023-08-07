@@ -67,13 +67,13 @@ class Controller : public RFModule
     IEncodersTimed*   ienc[4];
     IPositionControl* ipos[4];
     IPositionDirect*  iposd[4];
-    
+
     vector<int> posDirectMode;
     vector<int> curMode;
 
     ArmSolver solver;
     minJerkTrajGen* gen;
-    
+
     BufferedPort<Vector> statePort;
     TargetPort targetPort;
     RpcServer rpcPort;
@@ -184,7 +184,7 @@ class Controller : public RFModule
 
     /****************************************************************/
     void stopControl()
-    {        
+    {
         for (int i=0; i<4; i++)
             ipos[i]->stop((int)jointsIndexes[i].size(),jointsIndexes[i].data());
         controlling=false;
@@ -235,10 +235,10 @@ public:
         string robot=rf.check("robot",Value("cer")).asString();
         string arm_type=rf.check("arm-type",Value("left")).asString();
         verbosity=rf.check("verbosity",Value(0)).asInt();
-        stop_threshold_revolute=rf.check("stop-threshold-revolute",Value(2.0)).asDouble();
-        stop_threshold_prismatic=rf.check("stop-threshold-prismatic",Value(0.002)).asDouble();
-        double T=rf.check("T",Value(2.0)).asDouble();
-        Ts=rf.check("Ts",Value(MIN_TS)).asDouble();
+        stop_threshold_revolute=rf.check("stop-threshold-revolute",Value(2.0)).asFloat64();
+        stop_threshold_prismatic=rf.check("stop-threshold-prismatic",Value(0.002)).asFloat64();
+        double T=rf.check("T",Value(2.0)).asFloat64();
+        Ts=rf.check("Ts",Value(MIN_TS)).asFloat64();
         Ts=std::max(Ts,MIN_TS);
 
         Property option;
@@ -343,12 +343,12 @@ public:
         curMode=posDirectMode;
 
         getCurrentMode();
-        
+
         ArmParameters arm(arm_type);
         arm.upper_arm.setAllConstraints(false);
         solver.setArmParameters(arm);
 
-        gen=new minJerkTrajGen(qd,Ts,T);        
+        gen=new minJerkTrajGen(qd,Ts,T);
 
         return true;
     }
@@ -362,7 +362,7 @@ public:
             stopControl();
 
         if (!targetPort.isClosed())
-            targetPort.close(); 
+            targetPort.close();
 
         if (!statePort.isClosed())
             statePort.close();
@@ -372,10 +372,10 @@ public:
 
         if (!rpcPort.asPort().isOpen())
             rpcPort.close();
-                
+
         for (int i=0; i<4; i++)
             if (drivers[i].isValid())
-                drivers[i].close(); 
+                drivers[i].close();
 
         delete gen;
         return true;
@@ -435,13 +435,13 @@ public:
                         if (controlling==latch_controlling)
                         {
                             for (size_t i=0; i<qd.length(); i++)
-                                qd[i]=payLoadJoints->get(i).asDouble();
+                                qd[i]=payLoadJoints->get(i).asFloat64();
 
                             if (xd.length()==0)
                                 xd.resize((size_t)payLoadPose->size());
 
                             for (size_t i=0; i<xd.length(); i++)
-                                xd[i]=payLoadPose->get(i).asDouble();
+                                xd[i]=payLoadPose->get(i).asFloat64();
 
                             target=reply.tail();
 
@@ -509,7 +509,7 @@ public:
     bool updateModule()
     {
         lock_guard<mutex> lg(mtx);
-        getCurrentMode();        
+        getCurrentMode();
 
         Matrix Hee;
         double timeStamp;
@@ -540,7 +540,7 @@ public:
 
             if (areJointsHealthy())
             {
-                setPositionDirectMode(); 
+                setPositionDirectMode();
                 iposd[0]->setPositions((int)jointsIndexes[0].size(),jointsIndexes[0].data(),&ref[0]);
                 iposd[1]->setPositions((int)jointsIndexes[1].size(),jointsIndexes[1].data(),&ref[3]);
                 iposd[2]->setPositions((int)jointsIndexes[2].size(),jointsIndexes[2].data(),&ref[4]);
@@ -556,7 +556,7 @@ public:
             else
             {
                 yWarning("Detected joints in HW_FAULT and/or IDLE => stopping control");
-                stopControl();                
+                stopControl();
             }
         }
 
@@ -575,13 +575,13 @@ public:
                 if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
-                    gen->setT(cmd.get(2).asDouble());
+                    gen->setT(cmd.get(2).asFloat64());
                     reply.addVocab(Vocab::encode("ack"));
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
-                    Ts=cmd.get(2).asDouble();
+                    Ts=cmd.get(2).asFloat64();
                     Ts=std::max(Ts,MIN_TS);
                     gen->setTs(Ts);
                     reply.addVocab(Vocab::encode("ack"));
@@ -602,7 +602,7 @@ public:
                 }
                 else if (cmd_1=="torso_heave")
                 {
-                    Value torso_heave(cmd.get(2).asDouble());
+                    Value torso_heave(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("torso_heave",torso_heave);
 
                     if (go(p))
@@ -610,7 +610,7 @@ public:
                 }
                 else if (cmd_1=="lower_arm_heave")
                 {
-                    Value lower_arm_heave(cmd.get(2).asDouble());
+                    Value lower_arm_heave(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("lower_arm_heave",lower_arm_heave);
 
                     if (go(p))
@@ -618,7 +618,7 @@ public:
                 }
                 else if (cmd_1=="tol")
                 {
-                    Value tol(cmd.get(2).asDouble());
+                    Value tol(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("tol",tol);
 
                     if (go(p))
@@ -626,7 +626,7 @@ public:
                 }
                 else if (cmd_1=="constr_tol")
                 {
-                    Value constr_tol(cmd.get(2).asDouble());
+                    Value constr_tol(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("constr_tol",constr_tol);
 
                     if (go(p))
@@ -655,13 +655,13 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(gen->getT());
+                    reply.addFloat64(gen->getT());
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(Ts);
+                    reply.addFloat64(Ts);
                 }
                 else if (cmd_1=="verbosity")
                 {
@@ -756,8 +756,8 @@ public:
         }
 
         if (reply.size()==0)
-            reply.addVocab(Vocab::encode("nack")); 
-        
+            reply.addVocab(Vocab::encode("nack"));
+
         return true;
     }
 };
@@ -780,7 +780,7 @@ int main(int argc, char *argv[])
         yError("YARP server not available!");
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

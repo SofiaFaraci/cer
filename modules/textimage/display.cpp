@@ -174,7 +174,7 @@ bool MainModule::respond(const Bottle& command, Bottle& reply)
 {
     if (command.get(0).asString()=="set_speed")
     {
-        scroll_speed = command.get(1).asDouble();
+        scroll_speed = command.get(1).asFloat64();
     }
 
     reply.addVocab(Vocab::encode("ack"));
@@ -194,7 +194,7 @@ bool MainModule::configure(yarp::os::ResourceFinder &rf)
 
     if (rf.check("scroll_speed"))
     {
-        scroll_speed = rf.find("scroll_speed").asDouble();
+        scroll_speed = rf.find("scroll_speed").asFloat64();
     }
 
     if (rf.check("renderer"))

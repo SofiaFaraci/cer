@@ -85,7 +85,7 @@ class Controller : public RFModule
 
     MobileArmSolver solver;
     minJerkTrajGen* gen;
-    
+
     BufferedPort<Vector> statePort;
     TargetPort targetPort;
     RpcServer rpcPort;
@@ -252,14 +252,14 @@ public:
         string robot=rf.check("robot",Value("cer")).asString();
         string arm_type=rf.check("arm-type",Value("left")).asString();
         verbosity=rf.check("verbosity",Value(0)).asInt();
-        stop_threshold_revolute=rf.check("stop-threshold-revolute",Value(2.0)).asDouble();
-        stop_threshold_prismatic=rf.check("stop-threshold-prismatic",Value(0.002)).asDouble();
+        stop_threshold_revolute=rf.check("stop-threshold-revolute",Value(2.0)).asFloat64();
+        stop_threshold_prismatic=rf.check("stop-threshold-prismatic",Value(0.002)).asFloat64();
         string map_server=rf.check("map-server",Value("/mapServer")).asString();
         string loc_server=rf.check("loc-server",Value("/localizationServer")).asString();
         string nav_server=rf.check("nav-server",Value("/navigationServer")).asString();
         mapName=rf.check("map-name",Value("testMap")).asString();
-        double T=rf.check("T",Value(2.0)).asDouble();
-        Ts=rf.check("Ts",Value(MIN_TS)).asDouble();
+        double T=rf.check("T",Value(2.0)).asFloat64();
+        Ts=rf.check("Ts",Value(MIN_TS)).asFloat64();
         Ts=std::max(Ts,MIN_TS);
 
         Property option;
@@ -420,12 +420,12 @@ public:
         curMode=posDirectMode;
 
         getCurrentMode();
-        
+
         ArmParameters arm(arm_type);
         arm.upper_arm.setAllConstraints(false);
         solver.setArmParameters(arm);
 
-        gen=new minJerkTrajGen(qd,Ts,T);        
+        gen=new minJerkTrajGen(qd,Ts,T);
 
         return true;
     }
@@ -439,7 +439,7 @@ public:
             stopControl();
 
         if (!targetPort.isClosed())
-            targetPort.close(); 
+            targetPort.close();
 
         if (!statePort.isClosed())
             statePort.close();
@@ -449,10 +449,10 @@ public:
 
         if (!rpcPort.asPort().isOpen())
             rpcPort.close();
-                
+
         for (int i=0; i<6; i++)
             if (drivers[i].isValid())
-                drivers[i].close(); 
+                drivers[i].close();
 
         delete gen;
         return true;
@@ -507,9 +507,9 @@ public:
                     Map2DLocation p;
                     iloc->getCurrentPosition(p);
 
-                    bd.x=payLoadJoints->get(0).asDouble();
-                    bd.y=payLoadJoints->get(1).asDouble();
-                    bd.theta=payLoadJoints->get(2).asDouble();
+                    bd.x=payLoadJoints->get(0).asFloat64();
+                    bd.y=payLoadJoints->get(1).asFloat64();
+                    bd.theta=payLoadJoints->get(2).asFloat64();
                     bd.map_id=p.map_id;
 
                     NavigationStatusEnum navStatus;
@@ -524,13 +524,13 @@ public:
                     }
 
                     for (size_t i=0; i<qd.length(); i++)
-                        qd[i]=payLoadJoints->get(3+i).asDouble();
+                        qd[i]=payLoadJoints->get(3+i).asFloat64();
 
                     if (xd.length()==0)
                         xd.resize((size_t)payLoadPose->size());
 
                     for (size_t i=0; i<xd.length(); i++)
-                        xd[i]=payLoadPose->get(i).asDouble();
+                        xd[i]=payLoadPose->get(i).asFloat64();
 
                     target=reply.tail();
 
@@ -581,10 +581,10 @@ public:
         Bottle *robotPose=request.find("q").asList();
         Vector tu(4,0.0);
         tu[2]=1.0;
-        tu[3]=M_PI/180.0*robotPose->get(2).asDouble();
+        tu[3]=M_PI/180.0*robotPose->get(2).asFloat64();
         Matrix baseTransform=axis2dcm(tu);
-        baseTransform[0][3]=robotPose->get(0).asDouble();
-        baseTransform[1][3]=robotPose->get(1).asDouble();
+        baseTransform[0][3]=robotPose->get(0).asFloat64();
+        baseTransform[1][3]=robotPose->get(1).asFloat64();
 
         if (!request.check("domain") && iloc && imap)
         {
@@ -626,8 +626,8 @@ public:
                     if (verbosity>0)
                         yDebug() << "\t" << area.points[i].x << area.points[i].y;
                     area.points.size();
-                    coord.addDouble(area.points[i].x);
-                    coord.addDouble(area.points[i].y);
+                    coord.addFloat64(area.points[i].x);
+                    coord.addFloat64(area.points[i].y);
                 }
             }
             request.put("domain",b.get(0));
@@ -657,14 +657,14 @@ public:
                     }
 
                     Vector xd(3);
-                    xd[0]=target->get(0).asDouble();
-                    xd[1]=target->get(1).asDouble();
-                    xd[2]=target->get(2).asDouble();
+                    xd[0]=target->get(0).asFloat64();
+                    xd[1]=target->get(1).asFloat64();
+                    xd[2]=target->get(2).asFloat64();
                     Vector ud(4);
-                    ud[0]=target->get(3).asDouble();
-                    ud[1]=target->get(4).asDouble();
-                    ud[2]=target->get(5).asDouble();
-                    ud[3]=target->get(6).asDouble();
+                    ud[0]=target->get(3).asFloat64();
+                    ud[1]=target->get(4).asFloat64();
+                    ud[2]=target->get(5).asFloat64();
+                    ud[3]=target->get(6).asFloat64();
 
                     Matrix Hd=axis2dcm(ud);
                     Hd.setSubcol(xd,0,3);
@@ -673,13 +673,13 @@ public:
                     Vector x=Hd.subcol(0, 3, 3);
                     Vector u=dcm2axis(Hd);
                     target->clear();
-                    target->addDouble(x[0]);
-                    target->addDouble(x[1]);
-                    target->addDouble(x[2]);
-                    target->addDouble(u[0]);
-                    target->addDouble(u[1]);
-                    target->addDouble(u[2]);
-                    target->addDouble(u[3]);
+                    target->addFloat64(x[0]);
+                    target->addFloat64(x[1]);
+                    target->addFloat64(x[2]);
+                    target->addFloat64(u[0]);
+                    target->addFloat64(u[1]);
+                    target->addFloat64(u[2]);
+                    target->addFloat64(u[3]);
                     if (verbosity>0)
                     {
                         yDebug() << "Target transformed from local:";
@@ -715,8 +715,8 @@ public:
                 Vector marginO(3);
                 for(size_t i=0 ; i<3 ; i++)
                 {
-                    marginP[i]=margins->get(i).asDouble();
-                    marginO[i]=margins->get(i+3).asDouble();
+                    marginP[i]=margins->get(i).asFloat64();
+                    marginO[i]=margins->get(i+3).asFloat64();
                 }
 
                 if (Bottle *targetList=request.find("target").asList())
@@ -725,14 +725,14 @@ public:
                     {
                         Bottle *target=targetList->get(i).asList();
                         Vector xd(3);
-                        xd[0]=target->get(0).asDouble();
-                        xd[1]=target->get(1).asDouble();
-                        xd[2]=target->get(2).asDouble();
+                        xd[0]=target->get(0).asFloat64();
+                        xd[1]=target->get(1).asFloat64();
+                        xd[2]=target->get(2).asFloat64();
                         Vector ud(4);
-                        ud[0]=target->get(3).asDouble();
-                        ud[1]=target->get(4).asDouble();
-                        ud[2]=target->get(5).asDouble();
-                        ud[3]=target->get(6).asDouble();
+                        ud[0]=target->get(3).asFloat64();
+                        ud[1]=target->get(4).asFloat64();
+                        ud[2]=target->get(5).asFloat64();
+                        ud[3]=target->get(6).asFloat64();
 
                         Matrix Hd=axis2dcm(ud);
                         Matrix Rd=Hd.submatrix(0,2,0,2);
@@ -825,14 +825,14 @@ public:
                             if (verbosity>0)
                             {
                                 yDebug() << "Final base pose transformed from global:";
-                                yDebug() << "\t" << replyPose->get(0).asDouble() << replyPose->get(1).asDouble() << replyPose->get(2).asDouble();
+                                yDebug() << "\t" << replyPose->get(0).asFloat64() << replyPose->get(1).asFloat64() << replyPose->get(2).asFloat64();
                             }
                             Vector new_tu(4,0.0);
                             new_tu[2]=1.0;
-                            new_tu[3]=M_PI/180.0*replyPose->get(2).asDouble();
+                            new_tu[3]=M_PI/180.0*replyPose->get(2).asFloat64();
                             Matrix newBaseTransform=axis2dcm(new_tu);
-                            newBaseTransform[0][3]=replyPose->get(0).asDouble();
-                            newBaseTransform[1][3]=replyPose->get(1).asDouble();
+                            newBaseTransform[0][3]=replyPose->get(0).asFloat64();
+                            newBaseTransform[1][3]=replyPose->get(1).asFloat64();
                             newBaseTransform=SE3inv(baseTransform)*newBaseTransform;
                             replyPose->get(0)=Value(newBaseTransform[0][3]);
                             replyPose->get(1)=Value(newBaseTransform[1][3]);
@@ -842,7 +842,7 @@ public:
                             if (verbosity>0)
                             {
                                 yDebug() << "                              to local:";
-                                yDebug() << "\t" << replyPose->get(0).asDouble() << replyPose->get(1).asDouble() << replyPose->get(2).asDouble();
+                                yDebug() << "\t" << replyPose->get(0).asFloat64() << replyPose->get(1).asFloat64() << replyPose->get(2).asFloat64();
                             }
                         }
                     }
@@ -875,14 +875,14 @@ public:
                             }
 
                             Vector xd(3);
-                            xd[0]=target->get(0).asDouble();
-                            xd[1]=target->get(1).asDouble();
-                            xd[2]=target->get(2).asDouble();
+                            xd[0]=target->get(0).asFloat64();
+                            xd[1]=target->get(1).asFloat64();
+                            xd[2]=target->get(2).asFloat64();
                             Vector ud(4);
-                            ud[0]=target->get(3).asDouble();
-                            ud[1]=target->get(4).asDouble();
-                            ud[2]=target->get(5).asDouble();
-                            ud[3]=target->get(6).asDouble();
+                            ud[0]=target->get(3).asFloat64();
+                            ud[1]=target->get(4).asFloat64();
+                            ud[2]=target->get(5).asFloat64();
+                            ud[3]=target->get(6).asFloat64();
 
                             Matrix Hd=axis2dcm(ud);
                             Hd.setSubcol(xd,0,3);
@@ -891,13 +891,13 @@ public:
                             Vector x=Hd.subcol(0, 3, 3);
                             Vector u=dcm2axis(Hd);
                             target->clear();
-                            target->addDouble(x[0]);
-                            target->addDouble(x[1]);
-                            target->addDouble(x[2]);
-                            target->addDouble(u[0]);
-                            target->addDouble(u[1]);
-                            target->addDouble(u[2]);
-                            target->addDouble(u[3]);
+                            target->addFloat64(x[0]);
+                            target->addFloat64(x[1]);
+                            target->addFloat64(x[2]);
+                            target->addFloat64(u[0]);
+                            target->addFloat64(u[1]);
+                            target->addFloat64(u[2]);
+                            target->addFloat64(u[3]);
                             if (verbosity>0)
                             {
                                 yDebug() << "Target transformed from global:";
@@ -924,7 +924,7 @@ public:
     bool updateModule()
     {
         lock_guard<mutex> lg(mtx);
-        getCurrentMode();        
+        getCurrentMode();
 
         Matrix Hee;
         double timeStamp;
@@ -957,7 +957,7 @@ public:
 
             if (areJointsHealthy())
             {
-                setPositionDirectMode(); 
+                setPositionDirectMode();
                 iposd[0]->setPositions((int)jointsIndexes[0].size(),jointsIndexes[0].data(),&ref[0]);
                 iposd[1]->setPositions((int)jointsIndexes[1].size(),jointsIndexes[1].data(),&ref[3]);
                 iposd[2]->setPositions((int)jointsIndexes[2].size(),jointsIndexes[2].data(),&ref[4]);
@@ -973,7 +973,7 @@ public:
             else
             {
                 yWarning("Detected joints in HW_FAULT and/or IDLE => stopping control");
-                stopControl();                
+                stopControl();
             }
         }
 
@@ -992,13 +992,13 @@ public:
                 if (cmd_1=="T")
                 {
                     lock_guard<mutex> lg(mtx);
-                    gen->setT(cmd.get(2).asDouble());
+                    gen->setT(cmd.get(2).asFloat64());
                     reply.addVocab(Vocab::encode("ack"));
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
-                    Ts=cmd.get(2).asDouble();
+                    Ts=cmd.get(2).asFloat64();
                     Ts=std::max(Ts,MIN_TS);
                     gen->setTs(Ts);
                     reply.addVocab(Vocab::encode("ack"));
@@ -1019,7 +1019,7 @@ public:
                 }
                 else if (cmd_1=="torso_heave")
                 {
-                    Value torso_heave(cmd.get(2).asDouble());
+                    Value torso_heave(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("torso_heave",torso_heave);
 
                     if (go(p))
@@ -1027,7 +1027,7 @@ public:
                 }
                 else if (cmd_1=="lower_arm_heave")
                 {
-                    Value lower_arm_heave(cmd.get(2).asDouble());
+                    Value lower_arm_heave(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("lower_arm_heave",lower_arm_heave);
 
                     if (go(p))
@@ -1035,7 +1035,7 @@ public:
                 }
                 else if (cmd_1=="tol")
                 {
-                    Value tol(cmd.get(2).asDouble());
+                    Value tol(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("tol",tol);
 
                     if (go(p))
@@ -1043,7 +1043,7 @@ public:
                 }
                 else if (cmd_1=="constr_tol")
                 {
-                    Value constr_tol(cmd.get(2).asDouble());
+                    Value constr_tol(cmd.get(2).asFloat64());
                     Property p=prepareSolverOptions("constr_tol",constr_tol);
 
                     if (go(p))
@@ -1072,13 +1072,13 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(gen->getT());
+                    reply.addFloat64(gen->getT());
                 }
                 else if (cmd_1=="Ts")
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addDouble(Ts);
+                    reply.addFloat64(Ts);
                 }
                 else if (cmd_1=="verbosity")
                 {
@@ -1196,8 +1196,8 @@ public:
         }
 
         if (reply.size()==0)
-            reply.addVocab(Vocab::encode("nack")); 
-        
+            reply.addVocab(Vocab::encode("nack"));
+
         return true;
     }
 };
@@ -1220,7 +1220,7 @@ int main(int argc, char *argv[])
         yError("YARP server not available!");
         return 1;
     }
-    
+
     ResourceFinder rf;
     rf.configure(argc,argv);
 

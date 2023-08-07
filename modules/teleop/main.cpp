@@ -236,8 +236,8 @@ public:
             hands[HandThread::left_hand]  = &left;
             hands[HandThread::right_hand] = &right;
 
-            left.targetRadius = rf.find("left_radius").asDouble();
-            right.targetRadius = rf.find("right_radius").asDouble();
+            left.targetRadius = rf.find("left_radius").asFloat64();
+            right.targetRadius = rf.find("right_radius").asFloat64();
 
             if(!left.openControlBoards(rf)  ||
                !right.openControlBoards(rf))
@@ -338,7 +338,7 @@ public:
         else if (frameSource == VR_DEVICE)
         {
             for(int i = 0; i < HandThread::hand_count; ++i)
-            { 
+            {
                 string gripper = i ? "r_gripper" : "l_gripper";
                 double axis0, axis1;
                 bool reset = false;
