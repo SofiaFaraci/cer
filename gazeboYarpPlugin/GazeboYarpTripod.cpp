@@ -11,7 +11,6 @@
 #include <GazeboYarpPlugins/ConfHelpers.hh>
 
 #include <gazebo/physics/Model.hh>
-#include <yarp/dev/Wrapper.h>
 #include <yarp/os/Network.h>
 
 using namespace std;

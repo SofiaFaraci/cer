@@ -26,7 +26,7 @@
 #include <yarp/os/Time.h>
 #include <yarp/dev/DeviceDriver.h>
 #include <yarp/dev/PolyDriver.h>
-#include <yarp/dev/Wrapper.h>
+#include <yarp/dev/WrapperMultiple.h>
 #include <yarp/os/PeriodicThread.h>
 #include <yarp/dev/ControlBoardInterfacesImpl.h>
 
@@ -183,7 +183,7 @@ private:
  */
 
 class cer::dev::tripodMotionControl:    public DeviceDriver,
-                                        public IMultipleWrapper,
+                                        public WrapperMultiple,
                                         public IAxisInfo,
                                         public IControlCalibrationRaw,
                                         public ImplementControlCalibration,
@@ -238,7 +238,7 @@ private:
     int     *_axisMap;                              /** axis remapping lookup-table */
     double  *_angleToEncoder;                    /** angle conversion factor, if any */
     double  *_encodersStamp;                    /** keep information about acquisition time for encoders read */
-    
+
     double mRadius;
 
     double *_limitsMin;                         /** joint limits, max*/
@@ -304,7 +304,7 @@ public:
     virtual bool open(yarp::os::Searchable &par);
     virtual bool close();
 
-    // IMultipleWrapper interface
+    // WrapperMultiple interface
     virtual bool attachAll(const PolyDriverList &p);
     virtual bool detachAll();
 
@@ -480,7 +480,7 @@ public:
     bool setTorqueOffsetRaw(int j, double v)override;
     bool getMotorTorqueParamsRaw(int j, MotorTorqueParameters *params)override;
     bool setMotorTorqueParamsRaw(int j, const MotorTorqueParameters params)override;
-#endif 
+#endif
 
     // IVelocityControl2
     bool velocityMoveRaw(const int n_joint, const int *joints, const double *spds) override;
@@ -491,7 +491,7 @@ public:
     bool setImpedanceOffsetRaw(int j, double offset) override;
     bool getImpedanceOffsetRaw(int j, double *offset) override;
     bool getCurrentImpedanceLimitRaw(int j, double *min_stiff, double *max_stiff, double *min_damp, double *max_damp) override;
-#endif 
+#endif
 
     // PositionDirect Interface
     bool setPositionRaw(int j, double ref) override;
@@ -512,7 +512,7 @@ public:
     bool getTemperaturesRaw(double *vals) override;
     bool getTemperatureLimitRaw(int m, double *temp) override;
     bool setTemperatureLimitRaw(int m, const double temp) override;
-    
+
     // OPENLOOP interface
     bool setRefDutyCycleRaw(int j, double v) override;
     bool setRefDutyCyclesRaw(const double *v) override;

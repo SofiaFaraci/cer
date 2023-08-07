@@ -14,7 +14,7 @@
 #include <yarp/os/Time.h>
 #include <yarp/os/Stamp.h>
 #include <yarp/dev/Lidar2DDeviceBase.h>
-#include <yarp/dev/Wrapper.h>
+#include <yarp/dev/WrapperMultiple.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -33,7 +33,7 @@ namespace cer {
 class cer::dev::cerDoubleLidar :
     public yarp::dev::DeviceDriver,
     public yarp::dev::Lidar2DDeviceBase,
-    public yarp::dev::IMultipleWrapper
+    public yarp::dev::WrapperMultiple
 {
     struct LaserPose_t
     {
@@ -68,11 +68,11 @@ public:
 
     bool open(yarp::os::Searchable& config);
     bool close();
-    
-    //IMultipleWrapper interface
+
+    //WrapperMultiple interface
     bool attachAll(const yarp::dev::PolyDriverList &p) override;
     bool detachAll() override;
-    
+
     //IRangefinder2D interface
     virtual bool getRawData(yarp::sig::Vector &data) override;
     virtual bool getLaserMeasurement(std::vector<yarp::dev::LaserMeasurementData> &data) override;
@@ -87,13 +87,13 @@ private:
     bool verifyLasersConfigurations(void);
     bool getLasersInterfaces(void);
     bool createLasersDevices(void);
-    
+
     yarp::dev::PolyDriver * m_driver_laserFront = nullptr;
     yarp::dev::IRangefinder2D* m_dev_laserFront = nullptr;
 
     yarp::dev::PolyDriver * m_driver_laserBack = nullptr;
     yarp::dev::IRangefinder2D* m_dev_laserBack = nullptr;
-    
+
     bool m_inited;
     bool m_onSimulator; //if true the device looks for front and back laser devices in gazebo, else creates them
 
