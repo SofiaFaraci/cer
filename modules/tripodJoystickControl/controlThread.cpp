@@ -233,9 +233,9 @@ ctrl_options(options)
     max_elong = rf.check("max_elong", Value(0.2)).asFloat64();
     min_elong = rf.check("min_elong", Value(0.0)).asFloat64();
     max_alpha = rf.check("max_alpha", Value(15)).asFloat64();
-    joystick_channel_0 = rf.check("joystick_channel_0", Value(8)).asInt();
-    joystick_channel_1 = rf.check("joystick_channel_1", Value(7)).asInt();
-    joystick_channel_2 = rf.check("joystick_channel_2", Value(5)).asInt();
+    joystick_channel_0 = rf.check("joystick_channel_0", Value(8)).asInt8();
+    joystick_channel_1 = rf.check("joystick_channel_1", Value(7)).asInt8();
+    joystick_channel_2 = rf.check("joystick_channel_2", Value(5)).asInt8();
     gain_0 = rf.check("gain_0", Value(0.0001)).asFloat64();
     gain_1 = rf.check("gain_1", Value(0.0001)).asFloat64();
     gain_2 = rf.check("gain_2", Value(0.0002)).asFloat64();

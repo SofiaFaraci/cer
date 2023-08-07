@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     }
 
     string type=rf.check("type",Value("gaze")).asString();
-    int verbosity=rf.check("verbosity",Value(0)).asInt();
+    int verbosity=rf.check("verbosity",Value(0)).asInt8();
 
     if (avFrames.find(type)==avFrames.end())
     {

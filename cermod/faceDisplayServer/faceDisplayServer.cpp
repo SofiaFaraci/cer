@@ -123,12 +123,12 @@ bool FaceDisplayServer::open(yarp::os::Searchable &config)
 
     if (config.check("selfTest"))
     {
-        selfTest = config.check("selfTest", yarp::os::Value(1), "Run one of the selt tests from (1 to 3)").asInt();
+        selfTest = config.check("selfTest", yarp::os::Value(1), "Run one of the selt tests from (1 to 3)").asInt8();
         yWarning() << "Device working in selfTest " << selfTest << " mode.";
     }
 
     // used in selfTestmode 2 for now, maybe useful also for automatic transitions later on ... ???
-    steps = config.check("steps", yarp::os::Value(30), "Number of transition between start and end").asInt();
+    steps = config.check("steps", yarp::os::Value(30), "Number of transition between start and end").asInt8();
 
     if(steps <=0)
         yError() << "Number of steps must be a positive integer";

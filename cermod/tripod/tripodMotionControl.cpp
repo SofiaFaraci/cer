@@ -510,7 +510,7 @@ bool tripodMotionControl::open(yarp::os::Searchable &config)
         return false;
     }
     else
-       _njoints = general.find("Joints").asInt();
+       _njoints = general.find("Joints").asInt8();
 
     if(!alloc(_njoints))
     {
@@ -701,7 +701,7 @@ bool tripodMotionControl::parseTorquePidsGroup(Bottle& pidsGroup, Pid myPid[], d
     if (!extractGroup(pidsGroup, xtmp, "kff",   "Pid kff parameter", _njoints))       return false; for (j=0; j<_njoints; j++) myPid[j].kff  = xtmp.get(j+1).asFloat64();
     if (!extractGroup(pidsGroup, xtmp, "kbemf", "kbemf parameter", _njoints))         return false; for (j=0; j<_njoints; j++) kbemf[j]      = xtmp.get(j+1).asFloat64();
     if (!extractGroup(pidsGroup, xtmp, "ktau", "ktau parameter", _njoints))           return false; for (j=0; j<_njoints; j++) ktau[j]       = xtmp.get(j+1).asFloat64();
-    if (!extractGroup(pidsGroup, xtmp, "filterType", "filterType param", _njoints))   return false; for (j=0; j<_njoints; j++) filterType[j] = xtmp.get(j+1).asInt();
+    if (!extractGroup(pidsGroup, xtmp, "filterType", "filterType param", _njoints))   return false; for (j=0; j<_njoints; j++) filterType[j] = xtmp.get(j+1).asInt8();
 
 
     //optional PWM limit

@@ -53,7 +53,7 @@ public:
         solver.setParameters(TripodParameters(0.09,0.0,0.2,30.0,R));
 
         rho.resize(3,0.0);
-        solver.setVerbosity(rf.check("verbosity",Value(1)).asInt());
+        solver.setVerbosity(rf.check("verbosity",Value(1)).asInt8());
         gen=new minJerkTrajGen(rho,getPeriod(),2.0);
 
         iPort.open("/solver:i");

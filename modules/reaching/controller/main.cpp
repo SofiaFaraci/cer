@@ -234,7 +234,7 @@ public:
     {
         string robot=rf.check("robot",Value("cer")).asString();
         string arm_type=rf.check("arm-type",Value("left")).asString();
-        verbosity=rf.check("verbosity",Value(0)).asInt();
+        verbosity=rf.check("verbosity",Value(0)).asInt8();
         stop_threshold_revolute=rf.check("stop-threshold-revolute",Value(2.0)).asFloat64();
         stop_threshold_prismatic=rf.check("stop-threshold-prismatic",Value(0.002)).asFloat64();
         double T=rf.check("T",Value(2.0)).asFloat64();
@@ -589,7 +589,7 @@ public:
                 else if (cmd_1=="verbosity")
                 {
                     lock_guard<mutex> lg(mtx);
-                    verbosity=cmd.get(2).asInt();
+                    verbosity=cmd.get(2).asInt8();
                     reply.addVocab(Vocab::encode("ack"));
                 }
                 else if (cmd_1=="mode")
@@ -643,7 +643,7 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addInt(controlling?0:1);
+                    reply.addInt8(controlling?0:1);
                 }
                 else if (cmd_1=="target")
                 {
@@ -667,7 +667,7 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addInt(verbosity);
+                    reply.addInt8(verbosity);
                 }
                 else if (cmd_1=="mode")
                 {

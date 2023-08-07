@@ -395,7 +395,7 @@ public:
     {
         string robot=rf.check("robot",Value("cer")).asString();
         bool get_bounds=(rf.check("get-bounds",Value("on")).asString()=="on");
-        verbosity=rf.check("verbosity",Value(0)).asInt();
+        verbosity=rf.check("verbosity",Value(0)).asInt8();
         stop_threshold=rf.check("stop-threshold",Value(2.0)).asFloat64();
         double T=rf.check("T",Value(1.0)).asFloat64();
         Ts=rf.check("Ts",Value(MIN_TS)).asFloat64();
@@ -737,7 +737,7 @@ public:
                 else if (cmd_1=="verbosity")
                 {
                     lock_guard<mutex> lg(mtx);
-                    verbosity=cmd.get(2).asInt();
+                    verbosity=cmd.get(2).asInt8();
                     for (auto &s:solver)
                         s.second.setVerbosity(verbosity);
                     reply.addVocab(Vocab::encode("ack"));
@@ -771,7 +771,7 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addInt(controlling?0:1);
+                    reply.addInt8(controlling?0:1);
                 }
                 else if (cmd_1=="T")
                 {
@@ -789,7 +789,7 @@ public:
                 {
                     lock_guard<mutex> lg(mtx);
                     reply.addVocab(Vocab::encode("ack"));
-                    reply.addInt(verbosity);
+                    reply.addInt8(verbosity);
                 }
                 else if (cmd_1=="joints-limits::pitch")
                 {

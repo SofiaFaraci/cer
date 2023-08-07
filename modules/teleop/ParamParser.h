@@ -36,7 +36,7 @@ public:
         isFunctionMap[TYPE_BOOL  ] = &yarp::os::Value::isBool;
         isFunctionMap[TYPE_DOUBLE] = &yarp::os::Value::isFloat64;
         isFunctionMap[TYPE_BLOB  ] = &yarp::os::Value::isBlob;
-        isFunctionMap[TYPE_INT   ] = &yarp::os::Value::isInt;
+        isFunctionMap[TYPE_INT   ] = &yarp::os::Value::isInt8;
         isFunctionMap[TYPE_INT64 ] = &yarp::os::Value::isInt64;
         isFunctionMap[TYPE_LIST  ] = &yarp::os::Value::isList;
         isFunctionMap[TYPE_LEAF  ] = &yarp::os::Value::isLeaf;

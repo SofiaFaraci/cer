@@ -876,7 +876,7 @@ void R1ControlModule::sendCOM(const std::string& name, int R, int G, int B, cer:
 
     botR.addFloat64(0.0); botR.addFloat64(0.0); botR.addFloat64(0.0);
 
-    botR.addInt(R); botR.addInt(G); botR.addInt(B);
+    botR.addInt8(R); botR.addInt8(G); botR.addInt8(B);
     botR.addFloat64(alpha);
     //botR.addString("WORLD");
     portObjects.writeStrict();
@@ -898,7 +898,7 @@ void R1ControlModule::sendTarget(const char* name, int R, int G, int B, double x
     botR.addFloat64(ry);
     botR.addFloat64(rz);
 
-    botR.addInt(R); botR.addInt(G); botR.addInt(B);
+    botR.addInt8(R); botR.addInt8(G); botR.addInt8(B);
     botR.addFloat64(alpha);
     //botR.addString("WORLD");
     portObjects.writeStrict();
@@ -920,7 +920,7 @@ void R1ControlModule::sendCover(const std::string& name, double x, double y, dou
     botR.addFloat64(360.0);
     botR.addFloat64(360.0);
 
-    botR.addInt(255); botR.addInt(255); botR.addInt(255);
+    botR.addInt8(255); botR.addInt8(255); botR.addInt8(255);
     botR.addFloat64(1.0);
     //botR.addString("WORLD");
     portObjects.writeStrict();

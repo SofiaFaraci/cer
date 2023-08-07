@@ -46,7 +46,7 @@ protected:
     Port            rpcPort;
 
 public:
-    CtrlModule() 
+    CtrlModule()
     {
         control_thr=0;
     }
@@ -54,7 +54,7 @@ public:
     virtual bool configure(ResourceFinder &rf)
     {
         //set the thread rate
-        int rate = rf.check("rate",Value(10)).asInt();
+        int rate = rf.check("rate",Value(10)).asInt8();
         yInfo("baseCtrl thread rate: %d ms.",rate);
 
         //start the control thread
@@ -71,9 +71,9 @@ public:
         return true;
     }
 
-    bool respond(const Bottle& command, Bottle& reply) 
+    bool respond(const Bottle& command, Bottle& reply)
     {
-        reply.clear(); 
+        reply.clear();
         reply.addString("Unknown command.");
         return true;
     }
@@ -94,7 +94,7 @@ public:
 
     virtual double getPeriod()    { return 0.01;  }
     virtual bool   updateModule()
-    { 
+    {
         if (control_thr)
         {
             control_thr->printStats();

@@ -102,17 +102,17 @@ bool FaceExpressionImageModule::configure(ResourceFinder &rf)
     if(!ok) return false;
 
     // Check for optional params
-    th.hearBar0_x       = rf.check("hearBar0_x",      Value( 1), "horizontal offset from left border of outer ear bar, in pixels from upper left corner of the image, starting from 0").asInt();
-    th.hearBar0_y       = rf.check("hearBar0_y",      Value( 6), "vertical offset from bottom border of outer ear bar, in pixels from upper left corner of the image, starting from 0").asInt();
-    th.hearBar0_minLen  = rf.check("hearBar0_minLen", Value( 3), "minimum length  of outer ear bar").asInt();
-    th.hearBar0_maxLen  = rf.check("hearBar0_maxLen", Value(18), "maximum length  of outer ear bar").asInt();
-    th.hearBar0_len     = rf.check("hearBar0_len",    Value(10), "starting length of outer ear bar").asInt();
+    th.hearBar0_x       = rf.check("hearBar0_x",      Value( 1), "horizontal offset from left border of outer ear bar, in pixels from upper left corner of the image, starting from 0").asInt8();
+    th.hearBar0_y       = rf.check("hearBar0_y",      Value( 6), "vertical offset from bottom border of outer ear bar, in pixels from upper left corner of the image, starting from 0").asInt8();
+    th.hearBar0_minLen  = rf.check("hearBar0_minLen", Value( 3), "minimum length  of outer ear bar").asInt8();
+    th.hearBar0_maxLen  = rf.check("hearBar0_maxLen", Value(18), "maximum length  of outer ear bar").asInt8();
+    th.hearBar0_len     = rf.check("hearBar0_len",    Value(10), "starting length of outer ear bar").asInt8();
 
-    th.hearBar1_x       = rf.check("hearBar1_x",      Value( 3), "horizontal offset from left border of inner ear bar, in pixels from upper left corner of the image, starting from 0").asInt();
-    th.hearBar1_y       = rf.check("hearBar1_y",      Value( 6), "vertical offset from bottom border of inner ear bar, in pixels from upper left corner of the image, starting from 0").asInt();
-    th.hearBar1_minLen  = rf.check("hearBar1_minLen", Value( 4), "minimum length  of inner ear bar").asInt();
-    th.hearBar1_maxLen  = rf.check("hearBar1_maxLen", Value(19), "maximum length  of inner ear bar").asInt();
-    th.hearBar1_len     = rf.check("hearBar1_len",    Value(11), "starting length of inner ear bar").asInt();
+    th.hearBar1_x       = rf.check("hearBar1_x",      Value( 3), "horizontal offset from left border of inner ear bar, in pixels from upper left corner of the image, starting from 0").asInt8();
+    th.hearBar1_y       = rf.check("hearBar1_y",      Value( 6), "vertical offset from bottom border of inner ear bar, in pixels from upper left corner of the image, starting from 0").asInt8();
+    th.hearBar1_minLen  = rf.check("hearBar1_minLen", Value( 4), "minimum length  of inner ear bar").asInt8();
+    th.hearBar1_maxLen  = rf.check("hearBar1_maxLen", Value(19), "maximum length  of inner ear bar").asInt8();
+    th.hearBar1_len     = rf.check("hearBar1_len",    Value(11), "starting length of inner ear bar").asInt8();
 
     th.hearBarR0_x = FACE_WIDTH - 1 - th.hearBar0_x;
     th.hearBarR1_x = FACE_WIDTH - 1 - th.hearBar1_x;
@@ -354,7 +354,7 @@ void BlinkThread::run()
 	{
 		return;
 	}
-	
+
     lock_guard<mutex> lg(mtx);
     // Compute hear bars sizes
     // Left side

@@ -64,7 +64,7 @@ public:
         string arm_type=rf.check("arm-type",Value("left")).asString();
         double external_weight=rf.check("external-weight",Value(2.0)).asFloat64();
         double floor_z=rf.check("floor-z",Value(-0.16)).asFloat64();
-        int verbosity=rf.check("verbosity",Value(1)).asInt();
+        int verbosity=rf.check("verbosity",Value(1)).asInt8();
         bool enable_callback=rf.check("enable-callback");
 
         q.resize(12,0.0);

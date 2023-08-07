@@ -46,7 +46,7 @@ protected:
     Port            rpcPort;
 
 public:
-    CtrlModule() 
+    CtrlModule()
     {
         control_thr=0;
     }
@@ -156,7 +156,7 @@ public:
         }
 
         //set the thread rate
-        int rate = rf.check("rate",Value(10)).asInt();
+        int rate = rf.check("rate",Value(10)).asInt8();
         yInfo("baseCtrl thread rate: %d ms.",rate);
 
         //start the control thread
@@ -180,9 +180,9 @@ public:
         return true;
     }
 
-    bool respond(const Bottle& command, Bottle& reply) 
+    bool respond(const Bottle& command, Bottle& reply)
     {
-        reply.clear(); 
+        reply.clear();
         reply.addString("Unknown command.");
         return true;
     }
@@ -201,13 +201,13 @@ public:
         return true;
     }
 
-    virtual double getPeriod()    
+    virtual double getPeriod()
     {
         return 0.1;
     }
 
     virtual bool   updateModule()
-    { 
+    {
         robot_status robstatus;
         static int life_counter = 0;
         char text[1000];

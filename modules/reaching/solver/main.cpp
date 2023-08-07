@@ -139,7 +139,7 @@ public:
         string robot=rf.check("robot",Value("cer")).asString();
         string arm_type=rf.check("arm-type",Value("left")).asString();
         bool get_bounds=(rf.check("get-bounds",Value("on")).asString()=="on");
-        int verbosity=rf.check("verbosity",Value(0)).asInt();
+        int verbosity=rf.check("verbosity",Value(0)).asInt8();
 
         SolverParameters p=solver.getSolverParameters();
         p.setMode("full_pose");

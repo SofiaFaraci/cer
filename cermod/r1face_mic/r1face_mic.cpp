@@ -65,7 +65,7 @@ R1faceMic::R1faceMic(): PeriodicThread(0),
                         userChannelsNum(8)
 {
     tmpData     = new inputData;
-    
+
     const size_t _channels = HW_STEREO_CHANNELS * STEREO;
     const size_t _samples = BUFFER_SIZE * CHUNK_SIZE;
     const size_t _depth = 4;
@@ -87,7 +87,7 @@ bool R1faceMic::open(yarp::os::Searchable &params)
     if(params.check("audioDevice") && params.find("audioDevice").isString())
         deviceFile = params.find("audioDevice").asString();
 
-    shift = params.check("shift", yarp::os::Value(6)).asInt();
+    shift = params.check("shift", yarp::os::Value(6)).asInt8();
 
     bool singleChannel = params.check("channel");
     if (singleChannel)
@@ -229,7 +229,7 @@ bool R1faceMic::getSound(yarp::sig::Sound& sound, size_t min_number_of_samples, 
     }
     sound.setFrequency(samplingRate);
     sound.clear();
-    
+
     ///////////////////////////////////////////////
     // Extract channels from acquired buffer and
     // manipulate them to get meaningful information

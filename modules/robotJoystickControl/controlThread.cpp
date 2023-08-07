@@ -358,7 +358,7 @@ void ControlThread::option1(double* axis)
     {
         Bottle& b = robotCmdPort_base.prepare();
         b.clear();
-        b.addInt(3);
+        b.addInt8(3);
         b.addFloat64(val5); //x_lin_speed
         b.addFloat64(0.0); //y_lin_speed
         b.addFloat64(val3); //ang_speed
